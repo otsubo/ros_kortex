@@ -4,12 +4,12 @@
     <!-- Start the GUIs -->
     <arg name="start_gazebo" default="true"/>
     <arg name="gazebo_gui"   default ="true"/>
-    <arg name="start_rviz" default="true"/>
+    <arg name="start_rviz" default="false"/>
     
     <!-- Initial position in Gazebo -->
     <arg name="x0" default="0"/>
     <arg name="y0" default="0"/>
-    <arg name="z0" default="0"/>
+    <arg name="z0" default="0.8"/>
 
     <!-- Arm type -->
     <arg name="arm" default="gen3"/>
@@ -18,7 +18,7 @@
     <arg name="vision" default="true"/> <!-- True if the arm has a Vision module -->
     
     <!-- Default gripper for Gen3 is none, default gripper for Gen3 lite is gen3_lite_2f -->
-    <arg name="gripper" default="" if="$(eval arg('arm') == 'gen3')"/>
+    <arg name="gripper" default="robotiq_2f_140" if="$(eval arg('arm') == 'gen3')"/>
     <arg name="gripper" default="gen3_lite_2f" if="$(eval arg('arm') == 'gen3_lite')"/>
     
     <arg name="robot_name" default="my_$(arg arm)"/>
@@ -28,7 +28,7 @@
     <!-- Gazebo parameters -->
     <arg name="use_sim_time" default="true"/>
     <arg name="debug" default="false" />
-    <arg name="paused" default="true"/>
+    <arg name="paused" default="false"/>
 
     <!-- Start Gazebo -->
     <include file="$(find kortex_gazebo)/launch/start_gazebo.launch" if="$(arg start_gazebo)">
@@ -39,7 +39,7 @@
     </include>
 
     <!-- Delay before homing the arm -->
-    <arg name="start_delay_seconds" default="10"/>
+    <arg name="start_delay_seconds" default="0"/>
 
     <group ns="$(arg robot_name)">
 
@@ -99,24 +99,24 @@
         <!-- Individual position controllers are stopped at first -->
 
         <!-- For 6 DOF arms -->
-        <node name="$(arg prefix)$(arg arm)_position_controllers_spawner" pkg="controller_manager" type="spawner" respawn="false"
-            output="screen" if="$(eval arg('dof') == 6)" args=" --stopped
-            $(arg prefix)joint_1_position_controller
-            $(arg prefix)joint_2_position_controller
-            $(arg prefix)joint_3_position_controller
-            $(arg prefix)joint_4_position_controller
-            $(arg prefix)joint_5_position_controller
-            $(arg prefix)joint_6_position_controller"/>
-        <!-- For 7 DOF arms -->
-        <node name="$(arg prefix)$(arg arm)_position_controllers_spawner" pkg="controller_manager" type="spawner" respawn="false"
-            output="screen" if="$(eval arg('dof') == 7)" args=" --stopped
-            $(arg prefix)joint_1_position_controller
-            $(arg prefix)joint_2_position_controller
-            $(arg prefix)joint_3_position_controller
-            $(arg prefix)joint_4_position_controller
-            $(arg prefix)joint_5_position_controller
-            $(arg prefix)joint_6_position_controller
-            $(arg prefix)joint_7_position_controller"/>
+        <!-- <node name="$(arg prefix)$(arg arm)_position_controllers_spawner" pkg="controller_manager" type="spawner" respawn="false" -->
+        <!--     output="screen" if="$(eval arg('dof') == 6)" args=" -\-stopped -->
+        <!--     $(arg prefix)joint_1_position_controller -->
+        <!--     $(arg prefix)joint_2_position_controller -->
+        <!--     $(arg prefix)joint_3_position_controller -->
+        <!--     $(arg prefix)joint_4_position_controller -->
+        <!--     $(arg prefix)joint_5_position_controller -->
+        <!--     $(arg prefix)joint_6_position_controller"/> -->
+        <!-- <!-\- For 7 DOF arms -\-> -->
+        <!-- <node name="$(arg prefix)$(arg arm)_position_controllers_spawner" pkg="controller_manager" type="spawner" respawn="false" -->
+        <!--     output="screen" if="$(eval arg('dof') == 7)" args=" -\-stopped -->
+        <!--     $(arg prefix)joint_1_position_controller -->
+        <!--     $(arg prefix)joint_2_position_controller -->
+        <!--     $(arg prefix)joint_3_position_controller -->
+        <!--     $(arg prefix)joint_4_position_controller -->
+        <!--     $(arg prefix)joint_5_position_controller -->
+        <!--     $(arg prefix)joint_6_position_controller -->
+        <!--     $(arg prefix)joint_7_position_controller"/> -->
 
         <!-- Start simulated Kortex Driver -->
         <node name="$(arg robot_name)_driver" pkg="kortex_driver" type="kortex_arm_driver" output="screen"> <!--launch-prefix="gdb -ex run args"-->
@@ -162,8 +162,6 @@
             <param name="wait_time" value="60" />
         </test> 
 
-        <!-- Start RViz -->
-        <node name="rviz" pkg="rviz" type="rviz" if="$(arg start_rviz)"/> 
     
     </group>
 
