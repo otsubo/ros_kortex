@@ -21,7 +21,7 @@
     <arg name="gripper" default="robotiq_2f_140" if="$(eval arg('arm') == 'gen3')"/>
     <arg name="gripper" default="gen3_lite_2f" if="$(eval arg('arm') == 'gen3_lite')"/>
     
-    <arg name="robot_name" default="my_$(arg arm)"/>
+    <arg name="robot_name" default="arm_$(arg arm)"/>
     <arg name="prefix" default=""/>
     <arg name="cyclic_data_publish_rate" default="40"/> <!--Hz-->
 
@@ -119,19 +119,19 @@
         <!--     $(arg prefix)joint_7_position_controller"/> -->
 
         <!-- Start simulated Kortex Driver -->
-        <node name="$(arg robot_name)_driver" pkg="kortex_driver" type="kortex_arm_driver" output="screen"> <!--launch-prefix="gdb -ex run args"-->
-            <param name="sim" value="true"/>
-            <param name="cyclic_data_publish_rate" value="$(arg cyclic_data_publish_rate)"/>
-            <param name="arm" value="$(arg arm)"/>
-            <param name="gripper" value="$(arg gripper)"/>
-            <param name="dof" value="$(arg dof)"/>
-            <param name="robot_name" value="$(arg robot_name)"/>
-            <param name="prefix" value="$(arg prefix)"/>
-            <rosparam command="load" file="$(find kortex_description)/arms/$(arg arm)/$(arg dof)dof/config/joint_limits.yaml" subst_value="true"/>
-            <rosparam command="load" file="$(find kortex_description)/arms/$(arg arm)/$(arg dof)dof/config/twist_limits.yaml" subst_value="true"/>
-            <!-- If there is a gripper, load the active joint names for it -->
-            <rosparam command="load" file="$(find kortex_description)/grippers/$(arg gripper)/config/joint_limits.yaml" unless="$(eval not arg('gripper'))" subst_value="true"/>
-        </node>
+        <!-- <node name="$(arg robot_name)_driver" pkg="kortex_driver" type="kortex_arm_driver" output="screen"> <!-\-launch-prefix="gdb -ex run args"-\-> -->
+        <!--     <param name="sim" value="true"/> -->
+        <!--     <param name="cyclic_data_publish_rate" value="$(arg cyclic_data_publish_rate)"/> -->
+        <!--     <param name="arm" value="$(arg arm)"/> -->
+        <!--     <param name="gripper" value="$(arg gripper)"/> -->
+        <!--     <param name="dof" value="$(arg dof)"/> -->
+        <!--     <param name="robot_name" value="$(arg robot_name)"/> -->
+        <!--     <param name="prefix" value="$(arg prefix)"/> -->
+        <!--     <rosparam command="load" file="$(find kortex_description)/arms/$(arg arm)/$(arg dof)dof/config/joint_limits.yaml" subst_value="true"/> -->
+        <!--     <rosparam command="load" file="$(find kortex_description)/arms/$(arg arm)/$(arg dof)dof/config/twist_limits.yaml" subst_value="true"/> -->
+        <!--     <!-\- If there is a gripper, load the active joint names for it -\-> -->
+        <!--     <rosparam command="load" file="$(find kortex_description)/grippers/$(arg gripper)/config/joint_limits.yaml" unless="$(eval not arg('gripper'))" subst_value="true"/> -->
+        <!-- </node> -->
 
         <!-- Start robot state publisher -->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
